@@ -23,3 +23,6 @@ python katan.py -i <input directory> -o <output directory>
 - htmlmin
 - bs4
 - jsmin
+
+### To-Do
+- hide js code 
