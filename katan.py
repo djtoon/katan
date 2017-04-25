@@ -7,6 +7,23 @@ import string
 import sys, getopt
 import argparse
 
+def compressJS(inF,outF):
+    inputPath = inF
+    outputPath = outF
+    fileContents = open(inputPath, 'r').read()
+    data= string.split(str(fileContents), '\n')
+    for idx, val in  enumerate(data):
+                                   if "console.log" in val:
+                                     data[idx]='\n'
+
+    cleanJs='\n'.join(data)
+    minified = jsmin(str(cleanJs))
+
+    outputFile = open(outputPath, 'w+')
+    outputFile.write(minified)
+    outputFile.close()
+
+
 
 
 def makeKatan(inputF):
@@ -52,7 +69,7 @@ def makeKatan(inputF):
             i.replaceWith(new_js.script)
 
     new_soup = BeautifulSoup('<link rel="stylesheet" href="css/'+cssFileName+'" type="text/css">','html.parser')
-    # soup.head.append(new_soup)
+    soup.head.append(new_soup)
 
     html = soup.prettify("utf-8")
 
@@ -88,6 +105,7 @@ if __name__ == "__main__":
 
         outDir=vars(parser.parse_args())['out']
         outDirCss=outDir+'/css'
+        outDirJs=outDir+'/js'
         inDir=vars(parser.parse_args())['in']
 
         print "Minimizing:"+inDir
@@ -97,16 +115,44 @@ if __name__ == "__main__":
         if not os.path.exists(outDirCss):
                 os.makedirs(outDirCss)
 
+        if not os.path.exists(outDirJs):
+                os.makedirs(outDirJs)
 
-        for file in  os.listdir(inDir):
-            try:
 
-                 if os.path.splitext(os.path.basename(file))[1]==".html":
-                     print "Processing file:"+os.path.join(inDir,file)
-                     makeKatan(os.path.join(inDir,file))
-            except:
-                print "Skipping -"+os.path.join(inDir,file)
-                pass
+
+
+        for file in os.listdir(inDir):
+                    try:
+
+                         if os.path.splitext(os.path.basename(file))[1]==".html":
+                             print "Processing HTML file:"+os.path.join(inDir,file)
+                             makeKatan(os.path.join(inDir,file))
+                         if os.path.splitext(os.path.basename(file))[1]==".js":
+                             print "Processing JS file:"+os.path.join(inDir,file)
+                             compressJS(os.path.join(inDir,file),os.path.join(outDirJs,file))
+
+                    except:
+                        print "Skipping -"+os.path.join(inDir,file)
+                        pass
+
+
+        for root, dirs, files in os.walk(inDir):
+            for dir in dirs:
+                newDir=os.path.join(inDir,dir)
+                for file in os.listdir(newDir):
+                    try:
+
+                         if os.path.splitext(os.path.basename(file))[1]==".html":
+                             print "Processing HTML file:"+os.path.join(newDir,file)
+                             makeKatan(os.path.join(newDir,file))
+                         if os.path.splitext(os.path.basename(file))[1]==".js":
+                             print "Processing JS file:"+os.path.join(newDir,file)
+                             compressJS(os.path.join(newDir,file),os.path.join(outDirJs,file))
+
+                    except Exception as e:
+                        print e
+                        print "Skipping -"+os.path.join(newDir,file)
+                        pass
         print "Done!"
     except:
         print "Error!"

@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='katan',
@@ -8,5 +8,6 @@ setup(
     license='',
     author='dan',
     author_email='',
-    description='', requires=['htmlmin', 'bs4', 'jsmin']
+    description='', requires=['htmlmin', 'bs4', 'jsmin'],
+    install_requires=['htmlmin', 'bs4', 'jsmin']
 )
