@@ -7,7 +7,8 @@ scans directory for html or js files and makes them ready for uploading to produ
 - minify html code
 - minify js files and html <script> tags
 - removes inline css styles into new css file ( adds link to stylesheet in head )
-
+- removes comments from html
+- removes console.log commands from js
 
 ### Install
 ```
