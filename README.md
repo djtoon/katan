@@ -12,7 +12,7 @@ python setup.py install
 ```
 python katan.py -i <input directory> -o <output directory>
 ```
-### requires
+### Requires
 - htmlmin
 - bs4
 - jsmin
